@@ -1,0 +1,111 @@
+
+{% extends "layout.html" %}
+
+{% block style%}
+<style>
+    .btn-xs {
+        display: inline-block;
+    }
+    .myUL li{
+        display: inline-block;
+        padding: 5px;
+        margin: 0px 3px;
+        border: 1px solid blueviolet;
+    }
+    .active {
+        border: none;
+        background-color: darkorange;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="body advert">
+        <!-- 面包屑 -->
+        <ol class="breadcrumb">
+            <li><a href="javascript:;">广告管理</a></li>
+            <li >广告列表</li>
+        </ol>
+        <div class="page-title">
+            <a href="/advert/add" class="btn btn-success btn-sm pull-right">添加广告</a>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form action="" class="form-inline">
+                    <select name="" class="form-control input-sm">
+                        <option value="">按年龄</option>
+                    </select>
+                    <select name="" class="form-control input-sm">
+                        <option value="">按性别</option>
+                    </select>
+                    <select name="" class="form-control input-sm">
+                        <option value="">按地区</option>
+                    </select>
+                    <select name="" class="form-control input-sm">
+                        <option value="">按日期</option>
+                    </select>
+                    <button class="btn btn-success btn-sm">筛选</button>
+                </form>
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <th>标题</th>
+                    <th>图片</th>
+                    <th>链接</th>
+                    <th>开始时间</th>
+                    <th>结束时间</th>
+                    <th>点击次数</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in data %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{item.title}}</td>
+                    <td><img style="width: 50px; height: auto" src="{{item.image}}" alt=""></td>
+                    <td>{{item.link}}</td>
+                    <td>{{item.start_time}}</td>
+                    <td>{{item.end_time}}</td>
+                    <td>1</td>
+                    <td><a href="/advert/update/{{ item._id }}" class="btn btn-info btn-xs">编辑</a>
+                        <a href="javascript:;" class="btn btn-danger btn-xs">删除</a></td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+         分页
+                        <ul class="pagination myUL pull-right">
+                            {% if current_page === 1 %}
+                            <li><a href="#">上一页</a></li>
+                            {% else %}
+                            <li><a href="/advert/list?page={{current_page-1}}">上一页</a></li>
+                            {% endif %}
+                            {% for i in range(0,page_total) %}
+                                {% if i+1 === current_page%}
+                                <li class="active"><a href="/advert/list?page={{i+1}}">{{ i+1 }}</a></li>
+                                {% else %}
+                                <li><a href="/advert/list?page={{i+1}}">{{ i+1 }}</a></li>
+                                {% endif %}
+                             {% endfor %}
+                            {% if current_page === page_total %}
+                            <li><a href="#">下一页</a></li>
+                            {% else %}
+                            <li><a href="/advert/list?page={{current_page+1}}">下一页</a></li>
+                            {% endif %}
+                        </ul>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}
+

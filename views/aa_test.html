@@ -1,0 +1,67 @@
+
+{% extends "layout.html" %}
+
+{% block content %}
+<br/>
+<br/>
+<!--<form method="post" id="test" action="/test" enctype="multipart/form-data">-->
+<form id="test">
+    <label>
+        title: <input type="text" name="title">
+        <br/>
+    </label>
+    <br/>
+    <label>
+        image: <input type="file" name="image">
+    </label>
+    <br/>
+    <label>
+        link: <input type="text" name="link">
+    </label>
+    <br/>
+    <label>
+        start_time: <input type="text" name="start_time">
+    </label>
+    <br/>
+    <label>
+        end_time: <input type="text" name="end_time">
+    </label>
+    <br/>
+    <label>
+        <input type="submit" value="submit">
+    </label>
+    <span class="showUrl"></span>
+    <img src="" class="showPic" alt="">
+</form>
+
+
+
+{% endblock %}
+
+{% block script %}
+<script>
+    $('#test').on('submit', function (e) {
+        e.preventDefault()
+        // var formData = $(this).serialize()
+        // console.log(formData)
+        var formData = new FormData($(this)[0])
+        $.ajax({
+            url: '/test',
+            type: 'post',
+            data: formData,
+            processData:false,
+            contentType:false,
+            success: function (res) {
+                if(res){
+                    alert("上传成功！");
+                }
+                console.log(res);
+
+                $(".avatar_img").attr("src",res);
+            },
+
+        })
+    })
+</script>
+{% endblock %}
+
