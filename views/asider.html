@@ -3,9 +3,10 @@
     <div class="profile">
 <!--        头像-->
         <div class="avatar img-circle">
-            <img class="avatar_img" src="/public/images/monkey.png">
+            <img class="avatar_img" src="{{user.image}}">
         </div>
-        <h4>布头儿</h4>
+        <h4>{{ user.name }}</h4>
+
     </div>
 
     <div class="navs">
@@ -58,7 +59,7 @@
                 </ul>
             </li>
             <li>
-                <a href="/advert/list">
+                <a href="/advert">
                     <i class="fa fa-bell"></i>
                     广告管理
                 </a>

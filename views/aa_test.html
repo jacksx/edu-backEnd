@@ -1,67 +1,168 @@
 
 {% extends "layout.html" %}
 
-{% block content %}
-<br/>
-<br/>
-<!--<form method="post" id="test" action="/test" enctype="multipart/form-data">-->
-<form id="test">
-    <label>
-        title: <input type="text" name="title">
-        <br/>
-    </label>
-    <br/>
-    <label>
-        image: <input type="file" name="image">
-    </label>
-    <br/>
-    <label>
-        link: <input type="text" name="link">
-    </label>
-    <br/>
-    <label>
-        start_time: <input type="text" name="start_time">
-    </label>
-    <br/>
-    <label>
-        end_time: <input type="text" name="end_time">
-    </label>
-    <br/>
-    <label>
-        <input type="submit" value="submit">
-    </label>
-    <span class="showUrl"></span>
-    <img src="" class="showPic" alt="">
-</form>
+{% block style%}
+<style>
+    .btn-xs {
+        display: inline-block;
+    }
+    .myUL li{
+        display: inline-block;
+        padding: 5px;
+        margin: 0px 3px;
+        border: 1px solid blueviolet;
+    }
+    .active {
+        border: none;
+        background-color: darkorange;
+    }
+</style>
+{% endblock %}
 
+{% block content %}
+
+<div class="container-fluid">
+    <div class="body advert">
+        <!-- 面包屑 -->
+        <ol class="breadcrumb">
+            <li><a href="javascript:;">广告管理</a></li>
+            <li >广告列表</li>
+        </ol>
+        <div class="page-title">
+            <a href="/advert/add" class="btn btn-success btn-sm pull-right">添加广告</a>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form action="" class="form-inline">
+                    <select name="" class="form-control input-sm">
+                        <option value="">按年龄</option>
+                    </select>
+                    <select name="" class="form-control input-sm">
+                        <option value="">按性别</option>
+                    </select>
+                    <select name="" class="form-control input-sm">
+                        <option value="">按地区</option>
+                    </select>
+                    <select name="" class="form-control input-sm">
+                        <option value="">按日期</option>
+                    </select>
+                    <button class="btn btn-success btn-sm">筛选</button>
+                </form>
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <th>标题</th>
+                    <th>图片</th>
+                    <th>链接</th>
+                    <th>开始时间</th>
+                    <th>结束时间</th>
+                    <th>点击次数</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="show_body">
+
+                </tbody>
+            </table>
+        </div>
+        分页
+
+<!--        art-template  分页  -->
+        <ul id="pagination-demo" class="pagination-sm pull-right"></ul>
+
+        <script type="text/html" id="template">
+            <% for(var i = 0 ; i < data.length ; i ++){ %>
+            <% var item = data[i]; %>
+
+            <tr>
+
+                <td><%=i+1%></td>
+                <td><%=item.title%></td>
+                <td><img style="width: 50px; height: auto" src="<%=item.image%>" alt=""></td>
+                <td><%=item.link%></td>
+                <td><%=item.start_time%></td>
+                <td><%=item.end_time%></td>
+                <td>1</td>
+                <td><a href="/advert/update/<%=item._id%>" class="btn btn-info btn-xs">编辑</a>
+                    <a href="javascript:;" class="btn btn-danger btn-xs">删除</a></td>
+            </tr>
+            <% } %>
+
+
+
+
+        </script>
+    </div>
+</div>
 
 
 {% endblock %}
 
 {% block script %}
-<script>
-    $('#test').on('submit', function (e) {
-        e.preventDefault()
-        // var formData = $(this).serialize()
-        // console.log(formData)
-        var formData = new FormData($(this)[0])
-        $.ajax({
-            url: '/test',
-            type: 'post',
-            data: formData,
-            processData:false,
-            contentType:false,
-            success: function (res) {
-                if(res){
-                    alert("上传成功！");
+
+<script src="/node_modules/art-template/dist/template-native.js"></script>
+
+<script src="/node_modules/twbs-pagination/jquery.twbsPagination.js"></script>
+<!--<script src="./node_modules/twbs-pagination/jquery.twbsPagination.js"></script>-->
+<script type="text/javascript">
+    const set_visPages = 5
+    $.ajax({
+        url:'/test/count',
+        type: 'get',
+        dataType: 'json',
+        success: function (res) {
+            $('#pagination-demo').twbsPagination({
+                totalPages: Math.ceil( res.count/set_visPages ),
+                visiblePages: set_visPages,
+                first: '首页',
+                last: "最后一页",
+                onPageClick: function (event, page) {
+                    load_more(page)
                 }
-                console.log(res);
-
-                $(".avatar_img").attr("src",res);
-            },
-
-        })
+            });
+        }
     })
+
+    function load_more(page) {
+        $.ajax({
+            url: '/advert/list',
+            type: 'get',
+            data: {
+                num: set_visPages,
+                current_page: page,
+
+            },
+            dataType: 'json',
+            success: function (res) {
+                if( res.err_code === 0){
+                    console.log(res)
+                    var temp_html = template('template', {
+                        data: res.advertList
+                    });
+                    $('#show_body').html(temp_html)
+                }
+            }
+        })
+    }
+
+
+    // $("#demo1").jqPaginator({
+    //     totalPages: 100,
+    //     visiblePages: 10,
+    //     currentPage: 1,
+    //     first: '<li class="first"><a href="javascript:void(0);">First<\/a><\/li>',
+    //     prev: '<li class="prev"><a href="javascript:void(0);">Previous<\/a><\/li>',
+    //     next: '<li class="next"><a href="/advert/list/"+{{page+1}}>Next<\/a><\/li>',
+    //     last: '<li class="last"><a href="javascript:void(0);">Last<\/a><\/li>',
+    //     page: '<li class="page"><a href="/advert/list/"+{{page+1}}>{{page}}<\/a><\/li>',
+    //     onPageChange: function(n) {
+    //         $("#demo1-text").html(n)
+    //
+    //     }
+    // })
+
 </script>
 {% endblock %}
 

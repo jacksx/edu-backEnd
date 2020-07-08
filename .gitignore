@@ -1,3 +1,7 @@
 .idea
 node_modules
 dist
+log.txt
+err_log.txt
+public/upload
+public/user_avatar

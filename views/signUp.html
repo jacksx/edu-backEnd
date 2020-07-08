@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注 册</title>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.css"></head>
+
+</head>
+
+<body>
+
+<div class="container" style="padding: 50px">
+    <form id="form-signup" class="form-horizontal" enctype="multipart/form-data">
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <div class="block-center">
+            <img style="width: 60px; height: auto" src="/public/images/default.png">
+        </div>
+
+        <label for="inputimg" >Avatar</label>
+        <input type="file" id="inputimg" name="image" class="form-control" placeholder="avatar file" autofocus>
+
+        <label for="inputEmail" >Email address</label>
+        <input type="email" id="inputEmail" name="email" class="form-control" placeholder="Email address"  required autofocus>
+
+        <label for="name" >Name</label>
+        <input type="text" id="name" name="name" class="form-control"  placeholder="Name" required>
+
+        <div class="form-group">
+            <div>gender</div>
+            <label class="radio-inline">
+                <input type="radio" name="gender" id="inlineRadio1" value="0"> 男
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="gender" id="inlineRadio2" value="1"> 女
+            </label>
+        </div>
+
+        <label for="inputPassword" >Password</label>
+        <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+    </form>
+
+</div> <!-- /container -->
+<script src="/node_modules/jquery/dist/jquery.js"></script>
+<script>
+
+    $('#form-signup').on('submit', function (e) {
+        e.preventDefault()
+        // var formData = $(this).serialize()
+        // console.log(formData)
+        var formData = new FormData($(this)[0])
+        $.ajax({
+            url: '/signUp',
+            type: 'post',
+            data: formData,
+            dataType: 'json',
+            processData:false,
+            contentType:false,
+            success: function (res) {
+                console.log(res);
+                if(res.err_code === 0){
+                    alert("上传成功！");
+                }
+
+                // $(".avatar_img").attr("src",res.msg);
+                // window.location.href = '/'
+
+
+            },
+
+        })
+    })
+</script>
+</body>
+</html>

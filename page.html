@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div id="test">111</div>
+
+<script type="text/html" id="template">
+    <thead>
+    <tr>
+        <td>序号</td>
+        <th>标题</th>
+        <th>图片</th>
+        <th>链接</th>
+        <th>链接</th>
+    </tr>
+    </thead>
+    <% for(var i = 0 ; i < list.length ; i ++){ %>
+    <% var item = list[i]; %>
+    <tr>
+        <td><%=i+1%></td>
+        <td><%=item.username%></td>
+        <td><%=item.password%></td>
+        <td><%=item.age%></td>
+        <td><%=item.sex%></td>
+    </tr>
+    <% } %>
+</script>
+
+<script src="./node_modules/jquery/dist/jquery.js"></script>
+<!--<script src="./node_modules/art-template/dist/template.js"></script>-->
+<script src="./node_modules/art-template/dist/template-native.js"></script>
+
+<script>
+    /*1.准备数据*/
+    var data = [
+        {"username":"<span style='color:red'>xgg1</span>","password":"123456","age":18,"sex":"男"},
+        {"username":"xgg2","password":"123456","age":18,"sex":"男"},
+        {"username":"xgg3","password":"123456","age":18,"sex":"男"}
+    ];
+    /*2.把数据转化成html格式的字符串  使用模版引擎 artTemplate  原生语法 */
+    /*2.1 下载 https://github.com/aui/art-template  */
+    /*2.2 引入在当前页面 template-native.js 原生语法的js文件*/
+    /*2.3 怎么使用模板引擎*/
+    /*2.3.1 创建模版  在html页面创建 <script type='text/template'><\/script> */
+    /*2.3.2 把数据使用在模版当中*/
+    /*2.3.3 有两个参数  第一个参数 模版的ID  第二个参数  数据（特殊要求：必须是对象{}）*/
+    /*2.3.4 返回的内容是什么 是html格式的字符串*/
+    /*2.3.5 注册模版内部能使用的函数  var a = function(){} ｛getConsole:function(){}｝*/
+    /*2.3.6 两个参数  第一个参数  方法的名称   第二个参数 方法名对应的函数 */
+    template.helper('getConsole',function(){
+        return console;
+    });
+
+    var html = template('template',{list:data});
+    /*3.渲染*/
+    $('#test').html(html);
+
+
+</script>
+</body>
+</html>

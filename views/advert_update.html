@@ -20,26 +20,26 @@
                 <div class="form-group">
                     <label for="" class="col-md-3 control-label">图片</label>
                     <div class="col-md-5">
-                        <img class="avatar_img" style="width: 30px; height: auto" src="{{ advert.image }}">
+                        <img class="avatar_img" style="width: 40px; height: auto" src="{{ advert.image }}">
                         <input type="file" class="form-control input-sm" placeholder="填写广告图片"  name="image">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="" class="col-md-3 control-label">链接</label>
                     <div class="col-md-5">
-                        <input type="text" class="form-control input-sm" placeholder="填写广告链接" value="{{advert.link}}" name="link">
+                        <input type="url" class="form-control input-sm" placeholder="填写广告链接" value="{{advert.link}}" name="link">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="" class="col-md-3 control-label">开始时间</label>
                     <div class="col-md-5">
-                        <input type="text" class="form-control input-sm" placeholder="填写开始时间" value="{{advert.start_time}}" name="start_time">
+                        <input type="date" class="form-control input-sm" placeholder="填写开始时间" value="{{advert.start_time}}" name="start_time">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="" class="col-md-3 control-label">结束时间</label>
                     <div class="col-md-5">
-                        <input type="text" class="form-control input-sm" placeholder="填写结束时间" value="{{advert.end_time}}" name="end_time">
+                        <input type="date" class="form-control input-sm" placeholder="填写结束时间" value="{{advert.end_time}}" name="end_time">
                     </div>
                 </div>
                 <!-- <div class="form-group">
@@ -97,18 +97,18 @@
         // console.log(formData)
         var formData = new FormData($(this)[0])
         $.ajax({
-            url: '/test',
+            url: '/advert/update/{{advert._id}}',
             type: 'post',
             data: formData,
             processData:false,
             contentType:false,
             success: function (res) {
-                if(res){
+                if(res.err_code === 0){
                     alert("上传成功！");
                 }
-                console.log(res);
+                window.location.href = '/advert'
 
-                $(".avatar_img").attr("src",res);
+                // $(".avatar_img").attr("src",res);
             },
 
         })

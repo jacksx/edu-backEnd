@@ -94,7 +94,7 @@
         // console.log(formData)
         var formData = new FormData($(this)[0])
         $.ajax({
-            url: '/test',
+            url: '/advert/add',
             type: 'post',
             data: formData,
             processData:false,
@@ -105,7 +105,7 @@
                 }
                 console.log(res);
 
-                $(".avatar_img").attr("src",res);
+                // $(".avatar_img").attr("src",res);
             },
 
         })

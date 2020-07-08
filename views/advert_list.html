@@ -62,43 +62,38 @@
                     <th>操作</th>
                 </tr>
                 </thead>
-                <tbody>
-                {% for item in data %}
-                <tr>
-                    <td>{{ loop.index }}</td>
-                    <td>{{item.title}}</td>
-                    <td><img style="width: 50px; height: auto" src="{{item.image}}" alt=""></td>
-                    <td>{{item.link}}</td>
-                    <td>{{item.start_time}}</td>
-                    <td>{{item.end_time}}</td>
-                    <td>1</td>
-                    <td><a href="/advert/update/{{ item._id }}" class="btn btn-info btn-xs">编辑</a>
-                        <a href="javascript:;" class="btn btn-danger btn-xs">删除</a></td>
-                </tr>
-                {% endfor %}
+                <tbody id="show_body">
+
                 </tbody>
             </table>
         </div>
-         分页
-                        <ul class="pagination myUL pull-right">
-                            {% if current_page === 1 %}
-                            <li><a href="#">上一页</a></li>
-                            {% else %}
-                            <li><a href="/advert/list?page={{current_page-1}}">上一页</a></li>
-                            {% endif %}
-                            {% for i in range(0,page_total) %}
-                                {% if i+1 === current_page%}
-                                <li class="active"><a href="/advert/list?page={{i+1}}">{{ i+1 }}</a></li>
-                                {% else %}
-                                <li><a href="/advert/list?page={{i+1}}">{{ i+1 }}</a></li>
-                                {% endif %}
-                             {% endfor %}
-                            {% if current_page === page_total %}
-                            <li><a href="#">下一页</a></li>
-                            {% else %}
-                            <li><a href="/advert/list?page={{current_page+1}}">下一页</a></li>
-                            {% endif %}
-                        </ul>
+        分页
+
+        <!--        art-template  分页  -->
+        <ul id="pagination-demo" class="pagination-sm pull-right"></ul>
+
+        <script type="text/html" id="template">
+            <% for(var i = 0 ; i < data.length ; i ++){ %>
+            <% var item = data[i]; %>
+
+            <tr>
+
+                <td><%=i+1%></td>
+                <td><%=item.title%></td>
+                <td><img style="width: 50px; height: auto" src="<%=item.image%>" alt=""></td>
+                <td><%=item.link%></td>
+                <td><%=item.start_time%></td>
+                <td><%=item.end_time%></td>
+                <td>1</td>
+                <td><a href="/advert/update/<%=item._id%>" class="btn btn-info btn-xs">编辑</a>
+                    <a href="/advert/delete/<%=item._id%>" class="btn btn-danger btn-xs">删除</a></td>
+            </tr>
+            <% } %>
+
+
+
+
+        </script>
     </div>
 </div>
 
@@ -107,5 +102,52 @@
 
 {% block script %}
 
+<script src="/node_modules/art-template/dist/template-native.js"></script>
+
+<script src="/node_modules/twbs-pagination/jquery.twbsPagination.js"></script>
+<!--<script src="./node_modules/twbs-pagination/jquery.twbsPagination.js"></script>-->
+<script type="text/javascript">
+    const set_visPages = 5
+    $.ajax({
+        url:'/page/count',
+        type: 'get',
+        dataType: 'json',
+        success: function (res) {
+            $('#pagination-demo').twbsPagination({
+                totalPages: Math.ceil( res.count/set_visPages ),
+                visiblePages: set_visPages,
+                first: '首页',
+                last: "最后一页",
+                onPageClick: function (event, page) {
+                    load_more(page)
+                }
+            });
+        }
+    })
+
+    function load_more(page) {
+        $.ajax({
+            url: '/advert/list',
+            type: 'get',
+            data: {
+                num: set_visPages,
+                current_page: page,
+
+            },
+            dataType: 'json',
+            success: function (res) {
+                if( res.err_code === 0){
+
+                    var temp_html = template('template', {
+                        data: res.advertList
+                    });
+                    $('#show_body').html(temp_html)
+                }
+            }
+        })
+    }
+
+
+</script>
 {% endblock %}
 
