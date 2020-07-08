@@ -6,6 +6,9 @@
 ``` bash
 npm install
 
+//启动mongoDB
+mongod 
+
 //开发环境运行，使用nodemon
 nodemon main.js
 
